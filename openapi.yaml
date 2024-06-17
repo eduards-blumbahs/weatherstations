@@ -1,0 +1,166 @@
+openapi: 3.0.3
+info:
+  title: Latvia Weather Stations API
+  description: Get information about weather stations in Latvia
+  version: 1.0.0
+
+servers:
+  - url: http://localhost/api
+
+tags:
+  - name: Stations
+    description: Get information about stations
+
+paths:
+  /stations:
+    get:
+      tags:
+        - Stations
+      summary: Get all weather stations
+      description: Returns a list of all stations
+      operationId: getStations
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/StationsResponse'
+        '401':
+          $ref: '#/components/responses/UnauthenticatedError'
+      security:
+        - bearerAuth: []
+
+  /stations/{stationId}:
+    get:
+      tags:
+        - Stations
+      summary: Get weather station by stationId
+      description: Returns a single station
+      operationId: getStation
+      parameters:
+        - name: stationId
+          in: path
+          description: stationId of station to return
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/StationResponse'
+        '401':
+          $ref: '#/components/responses/UnauthenticatedError'
+        '404':
+          $ref: '#/components/responses/NotFoundError'
+      security:
+        - bearerAuth: []
+
+components:
+  responses:
+    UnauthenticatedError:
+      description: Unauthenticated
+      content:
+        application/json:
+            schema:
+              type: object
+              properties:
+                message:
+                  type: string
+                  example: Unauthenticated
+    NotFoundError:
+      description: NotFound
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              message:
+                type: string
+                example: Station not found
+  schemas:
+    StationsResponse:
+      type: object
+      properties:
+        data:
+          type: array
+          items:
+              $ref: '#/components/schemas/Station'
+    StationResponse:
+      type: object
+      properties:
+        data:
+          $ref: '#/components/schemas/DetailedStation'
+    Station:
+      type: object
+      properties:
+        Station_id:
+          type: string
+          nullable: true
+          example: RIVE99PA
+        Name:
+          type: string
+          nullable: true
+          example: Ventspils
+    DetailedStation:
+      type: object
+      properties:
+        Station_id:
+          type: string
+          nullable: true
+          example: RIVE99PA
+        Name:
+          type: string
+          nullable: true
+          example: Ventspils
+        Wmo_id:
+          type: string
+          nullable: true
+          example: 26314
+        Begin_date:
+          type: string
+          nullable: true
+          example: 1873-01-01T00:00:00
+        End_date:
+          type: string
+          nullable: true
+          example: 3999-12-31T23:59:00
+        Latitude:
+          type: string
+          nullable: true
+          example: 572344
+        Longitude:
+          type: string
+          nullable: true
+          example: 213214
+        Gauss1:
+          type: string
+          nullable: true
+          example: 352000.31
+        Gauss2:
+          type: string
+          nullable: true
+          example: 364103.86
+        Geogr1:
+          type: string
+          nullable: true
+          example: 21.5372
+        Geogr2:
+          type: string
+          nullable: true
+          example: 57.3956
+        Elevation:
+          type: string
+          nullable: true
+          example: 2.33
+        Elevation_pressure:
+          type: string
+          nullable: true
+          example: 3.9
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
