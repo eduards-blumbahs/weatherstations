@@ -5,4 +5,4 @@ use Illuminate\Support\Facades\Route;
 
 Route::apiResource('stations', StationController::class)->only([
     'index', 'show'
-]);
+])->middleware('auth:sanctum');
