@@ -35,4 +35,9 @@ return [
         ],
     ],
 
+    'stations' => [
+        'base_path' => env('STATIONS_BASE_PATH'),
+        'resource_id' => env('STATIONS_RESOURCE_ID'),
+    ],
+
 ];
